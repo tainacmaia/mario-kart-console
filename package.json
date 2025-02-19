@@ -1,0 +1,13 @@
+{
+  "name": "projeto-node",
+  "version": "1.0.0",
+  "description": "Projeto desenvolvido durante as aulas sobre projetos Node.js da DIO.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "open": "echo \"Hello World!\" && exit 1"
+  },
+  "keywords": ["project", "node"],
+  "author": "Taina Maia",
+  "license": "ISC"
+}
