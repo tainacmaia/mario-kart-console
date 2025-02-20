@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "open": "echo \"Hello World!\" && exit 1"
+    "open": "echo \"Hello World!\" && exit 1",
+    "build": "node src/index.js",
+    "build-live": "node --watch src/index.js"
   },
   "keywords": ["project", "node"],
   "author": "Taina Maia",
