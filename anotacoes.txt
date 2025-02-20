@@ -4,4 +4,4 @@
 - Licença ISC (Internet Systems Consortium) é usada para para o licenciamento do software de sua responsabilidade. Permite que as pessoas façam qualquer coisa com seu código com a devida atribuição e sem garantia.
 - Para rodar um arquivo do projeto, é possível digitar no terminal o comando node + arquivo (com sua localização, se dentro de uma pasta). Ex: "node src/index.js"
 - É possível usar o comando --watch junto ao comando node para manter rastreadas alterações no arquivo, chamando-o novamente sem necessidade de digitar o comando. Ex: "node --watch src/index.js". Para encerrar o comando, selecione ctrl+c.
-- Scripts podem ser rodados com o comando "npm run <nomedoteste>". Ex: O "npm run build" declarado no package.json roda o comando "node --watch src/index.js" 
+- Scripts podem ser rodados com o comando "npm run <nomedoteste>". Ex: O "npm run build" declarado no package.json roda o comando "node src/index.js" 

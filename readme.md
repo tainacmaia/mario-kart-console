@@ -1,4 +1,4 @@
-<h1>Desafio de projeto do Felipão: Mario Kart.JS</h1>
+<h1>Desafio de projeto: Mario Kart.JS</h1>
 
   <table>
         <tr>
@@ -80,24 +80,28 @@
 
 <b>Jogadores:</b>
 
-<input type="checkbox" id="jogadores-item" />
-<label for="jogadores-item">O Computador deve receber dois personagens para disputar a corrida em um objeto cada</label>
-
+<p>O Computador deve receber dois personagens para disputar a corrida em um objeto cada.</p>
+<br>
 <b>Pistas:</b>
 
 <ul>
-  <li><input type="checkbox" id="pistas-1-item" /> <label for="pistas-1-item">Os personagens irão correr em uma pista aleatória de 5 rodadas</label></li>
-  <li><input type="checkbox" id="pistas-2-item" /> <label for="pistas-2-item">A cada rodada, será sorteado um bloco da pista que pode ser uma reta, curva ou confronto</label>
+  <li>Os personagens irão correr em uma pista aleatória de 5 rodadas</li>
+  <li>A cada rodada, será sorteado um bloco da pista que pode ser uma reta, curva ou confronto</li>
     <ul>
-      <li><input type="checkbox" id="pistas-2-1-item" /> <label for="pistas-2-1-item">Caso o bloco da pista seja uma RETA, o jogador deve jogar um dado de 6 lados e somar o atributo VELOCIDADE, quem vencer ganha um ponto</label></li>
-      <li><input type="checkbox" id="pistas-2-2-item" /> <label for="pistas-2-2-item">Caso o bloco da pista seja uma CURVA, o jogador deve jogar um dado de 6 lados e somar o atributo MANOBRABILIDADE, quem vencer ganha um ponto</label></li>
-      <li><input type="checkbox" id="pistas-2-3-item" /> <label for="pistas-2-3-item">Caso o bloco da pista seja um CONFRONTO, o jogador deve jogar um dado de 6 lados e somar o atributo PODER, quem perder, perde um ponto</label></li>
-      <li><input type="checkbox" id="pistas-2-3-item" /> <label for="pistas-2-3-item">Nenhum jogador pode ter pontuação negativa (valores abaixo de 0)</label></li>
+      <li>Caso o bloco da pista seja uma RETA, o jogador deve jogar um dado de 6 lados e somar o atributo VELOCIDADE, quem vencer ganha um ponto</li>
+      <li>Caso o bloco da pista seja uma CURVA, o jogador deve jogar um dado de 6 lados e somar o atributo MANOBRABILIDADE, quem vencer ganha um ponto</li>
+      <li>Caso o bloco da pista seja um CONFRONTO, o jogador deve jogar um dado de 6 lados e somar o atributo PODER, quem perder, perde um ponto</li>
+      <li>Nenhum jogador pode ter pontuação negativa (valores abaixo de 0)</li>
     </ul>
   </li>
 </ul>
 
 <b>Condição de vitória:</b>
 
-<input type="checkbox" id="vitoria-item" />
-<label for="vitoria-item">Ao final, vence quem acumulou mais pontos</label>
+<p>Ao final, vence quem acumulou mais pontos</p>
+
+<b>Como jogar:</b>
+<p>Você deve ter o node instalado na sua máquina. Clique <a target="_blank" href="https://nodejs.org/pt/download">aqui</a> para fazer o download.</p>
+<p>No terminal, selecione a pasta do projeto. Digite o comando "npm run build" e pressione enter.</p>
+
+
