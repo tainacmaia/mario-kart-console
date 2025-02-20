@@ -1,16 +1,16 @@
 <h1>Desafio de projeto: Mario Kart.JS</h1>
 
-  <table>
-        <tr>
-            <td>
-                <img src="./src/img/header.gif" alt="Mario Kart" width="200">
-            </td>
-            <td>
-                <b>Objetivo:</b>
-                <p>Mario Kart é uma série de jogos de corrida desenvolvida e publicada pela Nintendo. Nosso desafio será criar uma lógica de um jogo de vídeo game para simular corridas de Mario Kart, levando em consideração as regras e mecânicas abaixo.</p>
-            </td>
-        </tr>
-    </table>
+<table>
+    <tr>
+        <td>
+            <img src="./src/img/header.gif" alt="Mario Kart" width="200">
+        </td>
+        <td>
+            <b>Objetivo:</b>
+            <p>Mario Kart é uma série de jogos de corrida desenvolvida e publicada pela Nintendo. Nosso desafio será criar uma lógica de um jogo de vídeo game para simular corridas de Mario Kart, levando em consideração as regras e mecânicas abaixo.</p>
+        </td>
+    </tr>
+</table>
 
 <h2>Players</h2>
       <table style="border-collapse: collapse; width: 800px; margin: 0 auto;">
@@ -102,6 +102,6 @@
 
 <b>Como jogar:</b>
 <p>Você deve ter o node instalado na sua máquina. Clique <a target="_blank" href="https://nodejs.org/pt/download">aqui</a> para fazer o download.</p>
-<p>No terminal, selecione a pasta do projeto. Digite o comando "npm run build" e pressione enter.</p>
+<p>No terminal, vá até a pasta do projeto. Digite o comando "npm run build" e pressione enter.</p>
 
 
