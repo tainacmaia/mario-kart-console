@@ -1,18 +1,10 @@
-const player1 = {
-    NOME: "Mario",
-    VELOCIDADE: 4,
-    MANOBRABILIDADE: 3,
-    PODER: 3,
-    PONTOS: 0,
-};
+import { players } from "./constants/players.js" 
+import readline from 'readline';
 
-const player2 = {
-    NOME: "Luigi",
-    VELOCIDADE: 3,
-    MANOBRABILIDADE: 4,
-    PODER: 4,
-    PONTOS: 0,
-};
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 async function rollDice() {
     return Math.floor(Math.random() * 6) + 1;
@@ -21,6 +13,8 @@ async function rollDice() {
 async function getRandomBlock() {
     let random = Math.random();
     let result;
+    // console.log("Objeto posição do nome: " + Object.keys(player1).findIndex(x => player1[x] == player1.PONTOS));
+    // console.log("Objeto: " + Object.getOwnPropertyNames(player1)[Object.keys(player1).findIndex(x => player1[x] == player1.PONTOS)]);
 
     switch (true) {
         case random < 0.33:
@@ -65,38 +59,18 @@ async function playRaceEngine(character1, character2) {
             totalTestSkill1 = diceResult1 + character1.VELOCIDADE;
             totalTestSkill2 = diceResult2 + character2.VELOCIDADE;
 
-            await logRollResult(
-                character1.NOME,
-                "velocidade",
-                diceResult1,
-                character1.VELOCIDADE
-            );
+            await logRollResult(character1.NOME, "velocidade", diceResult1, character1.VELOCIDADE);
 
-            await logRollResult(
-                character2.NOME,
-                "velocidade",
-                diceResult2,
-                character2.VELOCIDADE
-            );
+            await logRollResult(character2.NOME, "velocidade", diceResult2, character2.VELOCIDADE);
         }
 
         if (block === "CURVA") {
             totalTestSkill1 = diceResult1 + character1.MANOBRABILIDADE;
             totalTestSkill2 = diceResult2 + character2.MANOBRABILIDADE;
 
-            await logRollResult(
-                character1.NOME,
-                "manobrabilidade",
-                diceResult1,
-                character1.MANOBRABILIDADE
-            );
+            await logRollResult(character1.NOME, "manobrabilidade", diceResult1, character1.MANOBRABILIDADE);
 
-            await logRollResult(
-                character2.NOME,
-                "manobrabilidade",
-                diceResult2,
-                character2.MANOBRABILIDADE
-            );
+            await logRollResult(character2.NOME, "manobrabilidade", diceResult2, character2.MANOBRABILIDADE);
         }
 
         if (block === "CONFRONTO") {
@@ -105,19 +79,9 @@ async function playRaceEngine(character1, character2) {
 
             console.log(`${character1.NOME} confrontou com ${character2.NOME}! 🥊`);
 
-            await logRollResult(
-                character1.NOME,
-                "poder",
-                diceResult1,
-                character1.PODER
-            );
+            await logRollResult(character1.NOME, "poder", diceResult1, character1.PODER);
 
-            await logRollResult(
-                character2.NOME,
-                "poder",
-                diceResult2,
-                character2.PODER
-            );
+            await logRollResult(character2.NOME, "poder", diceResult2, character2.PODER);
 
             if (powerResult1 > powerResult2 && character2.PONTOS > 0) {
                 console.log(
@@ -150,6 +114,7 @@ async function playRaceEngine(character1, character2) {
         }
 
         console.log("-----------------------------");
+        await timeout(3000);
     }
 }
 
@@ -165,10 +130,39 @@ async function declareWinner(character1, character2) {
     else console.log("A corrida terminou em empate");
 }
 
+async function chooseCharacter(players){
+    console.log("Personagens disponíveis:");
+    for(let i = 0; i < players.length; i++){ 
+        console.log(`${i + 1} - ${players[i].NOME}`)       
+        // Object.keys(players[i]).forEach(key => {
+        //     console.log(`${key}: ${players[i][`${key}`]}`)
+        // })
+    }
+
+    const index = await new Promise((resolve) => {
+        rl.question('Digite o número do seu personagem: ', (character) => {
+          resolve(character);
+        });
+    });
+    console.log(`Personagem escolhido: ${players[index - 1].NOME}`);
+    return players[index - 1];
+}
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 (async function main() {
-    console.log(
-        `🏁🚨 Corrida entre ${player1.NOME} e ${player2.NOME} começando...\n`
-    );
+    console.log("---------------- MARIO KART RACE ----------------");
+    console.log('Escolha dois personagens para participar:')
+    const player1 = await chooseCharacter(players);
+    console.log("-----------------------------");
+    const player2 = await chooseCharacter(players.filter(x => x != player1));
+    console.log("-----------------------------");
+    rl.close();
+    
+    console.log(`🏁🚨 Corrida entre ${player1.NOME} e ${player2.NOME} começando...\n`);
+    await timeout(2000);
 
     await playRaceEngine(player1, player2);
     await declareWinner(player1, player2);
