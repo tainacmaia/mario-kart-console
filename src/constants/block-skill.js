@@ -1,4 +1,4 @@
-export const blockSkill = {
+export const BLOCK_SKILL = {
     RETA: "VELOCIDADE",
     CURVA: "MANOBRABILIDADE",
     CONFRONTO: "PODER"

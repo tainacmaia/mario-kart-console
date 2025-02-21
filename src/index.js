@@ -1,5 +1,6 @@
-import { availableCharacters } from "./constants/available-characters.js" 
-import { blockSkill } from "./constants/block-skill.js"
+import { AVAILABLE_CHARACTERS  } from "./constants/available-characters.js" 
+import { BLOCK_SKILL } from "./constants/block-skill.js"
+import { PLAYER } from "./constants/player.constant.js"
 import readline from 'readline';
 
 const rl = readline.createInterface({
@@ -14,7 +15,7 @@ async function rollDice() {
 async function getRandomBlock() {
     let random = Math.random();
 
-    let result = function () {
+    return (function () {
         switch (true) {
             case random < 0.33:
                 return "RETA";
@@ -23,9 +24,7 @@ async function getRandomBlock() {
             default:
                 return "CONFRONTO";
         }
-    };
-
-    return result();
+    }());
 }
 
 async function logRollResult(characters, blockSkill, diceResults) {
@@ -46,69 +45,68 @@ async function playRaceEngine(characters) {
         let block = await getRandomBlock();
         console.log(`Bloco: ${block}`);
 
+        let isFightBlock = block == "CONFRONTO";
+
         // rolar os dados
-        let diceResults = [ await rollDice(), await rollDice() ]
+        let diceResults = [ await rollDice(), await rollDice() ];
 
         //teste de habilidade
         let totalTestSkills = [0,0];
-        totalTestSkills[0] = diceResults[0] + characters[0][blockSkill[block]];
-        totalTestSkills[1] = diceResults[1] + characters[1][blockSkill[block]];
+        totalTestSkills[PLAYER.ONE] = diceResults[PLAYER.ONE] + characters[PLAYER.ONE][BLOCK_SKILL[block]];
+        totalTestSkills[PLAYER.TWO] = diceResults[PLAYER.TWO] + characters[PLAYER.TWO][BLOCK_SKILL[block]];
 
-        if (block == "CONFRONTO") console.log(`${characters[0].NOME} confrontou ${characters[1].NOME}! 🥊`);
+        if (isFightBlock) console.log(`${characters[PLAYER.ONE].NOME} confrontou ${characters[PLAYER.TWO].NOME}! 🥊`);
 
-        await logRollResult(characters, blockSkill[block], diceResults);
+        await logRollResult(characters, BLOCK_SKILL[block], diceResults);
 
-        const winner = await declareRoundWinner(characters, totalTestSkills, block == "CONFRONTO");
+        const roundWinner = await declareRoundWinner(characters, totalTestSkills, isFightBlock);
 
-        switch(block){
-            case "RETA":
-            case "CURVA":
-                if (winner != null) characters[winner].PONTOS++;
-                break;
-            default:        
-                if (winner == 0 && characters[1].PONTOS > 0) {;
-                    characters[1].PONTOS--;
-                } else if (winner == 1 && characters[0].PONTOS > 0) {
-                    characters[0].PONTOS--;
-                }
-        }
+        characters = await updatePoints(characters, roundWinner, isFightBlock);
 
         console.log("-----------------------------");
         await timeout(2000);
-    }
+    } 
 
     return characters
 }
 
+async function updatePoints(characters, roundWinner, isFightBlock) {
+    if(!isFightBlock && roundWinner != PLAYER.NONE) characters[roundWinner].PONTOS++;
+    else if (isFightBlock) {
+        if (roundWinner == PLAYER.ONE && characters[PLAYER.TWO].PONTOS > 0) {
+            characters[PLAYER.TWO].PONTOS--;
+        } else if (roundWinner == PLAYER.TWO && characters[PLAYER.ONE].PONTOS > 0) {
+            characters[PLAYER.ONE].PONTOS--;
+        }
+    }
+    return characters;
+}
+
 async function declareRoundWinner(characters, totalTestSkills, isFightBlock) {
-    if (totalTestSkills[0] > totalTestSkills[1]) {
+    if (totalTestSkills[PLAYER.ONE] > totalTestSkills[PLAYER.TWO]) {
         console.log( isFightBlock ?
-            `${characters[0].NOME} venceu o confronto${characters[1].PONTOS > 0 ? `! ${characters[1].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[1].NOME} não tem pontos para perder.`}` :
-            `${characters[0].NOME} marcou um ponto!`
+            `${characters[PLAYER.ONE].NOME} venceu o confronto${characters[PLAYER.TWO].PONTOS > 0 ? `! ${characters[1].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[PLAYER.TWO].NOME} não tem pontos para perder.`}` :
+            `${characters[PLAYER.ONE].NOME} marcou um ponto!`
         );
-        return 0;
-    } else if (totalTestSkills[1] > totalTestSkills[0]) {
+        return PLAYER.ONE;
+    } else if (totalTestSkills[PLAYER.TWO] > totalTestSkills[PLAYER.ONE]) {
         console.log( isFightBlock ?
-            `${characters[1].NOME} venceu o confronto${characters[0].PONTOS > 0 ? `! ${characters[0].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[0].NOME} não tem pontos para perder.`}` :
-            `${characters[1].NOME} marcou um ponto!`
+            `${characters[PLAYER.TWO].NOME} venceu o confronto${characters[PLAYER.ONE].PONTOS > 0 ? `! ${characters[PLAYER.ONE].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[PLAYER.ONE].NOME} não tem pontos para perder.`}` :
+            `${characters[PLAYER.TWO].NOME} marcou um ponto!`
         );
-        return 1;
+        return PLAYER.TWO;
     } else {
         console.log("Houve um empate, ninguém ganha pontos.");
-        return null
+        return PLAYER.NONE
     }
 }
 
 async function declareFinalWinner(players) {
     console.log("Resultado final:");
-    console.log(`${players[0].NOME}: ${players[0].PONTOS} ponto(s)`);
-    console.log(`${players[1].NOME}: ${players[1].PONTOS} ponto(s)`);
+    players.forEach(player => console.log(`${player.NOME}: ${player.PONTOS} ponto(s)`))
 
-    if (players[0].PONTOS > players[1].PONTOS)
-        console.log(`\n${players[0].NOME} venceu a corrida! Parabéns! 🏆`);
-    else if (players[1].PONTOS > players[0].PONTOS)
-        console.log(`\n${players[1].NOME} venceu a corrida! Parabéns! 🏆`);
-    else console.log("A corrida terminou em empate");
+    const points = players[PLAYER.ONE].PONTOS - players[PLAYER.TWO].PONTOS;
+    console.log(points == 0 ? "\nA corrida terminou em empate" : `\n${ points > 0 ? players[PLAYER.ONE].NOME : players[PLAYER.TWO].NOME } venceu a corrida! Parabéns! 🏆`);
 }
 
 async function chooseCharacter(availableCharacters){
@@ -134,11 +132,11 @@ function timeout(ms) {
 (async function main() {
     console.log("---------------- MARIO KART RACE ----------------");
     console.log('Escolha dois personagens para participar:')
-    let players = [ await chooseCharacter(availableCharacters) ]
-    players.push(await chooseCharacter(availableCharacters.filter(x => x != players[0])))
+    let players = [ await chooseCharacter(AVAILABLE_CHARACTERS) ]
+    players.push(await chooseCharacter(AVAILABLE_CHARACTERS.filter(x => x != players[PLAYER.ONE])))
     rl.close();
     
-    console.log(`🏁🚨 Corrida entre ${players[0].NOME} e ${players[1].NOME} começando...\n`);
+    console.log(`🏁🚨 Corrida entre ${players[PLAYER.ONE].NOME} e ${players[PLAYER.TWO].NOME} começando...\n`);
     await timeout(2000);
 
     players = await playRaceEngine(players);

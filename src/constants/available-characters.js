@@ -1,4 +1,4 @@
-export const availableCharacters = [
+export const AVAILABLE_CHARACTERS = [
     {
         INDEX: 1,
         NOME: "Mario",
