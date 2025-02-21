@@ -1,6 +1,6 @@
 import { AVAILABLE_CHARACTERS  } from "./constants/available-characters.js" 
 import { BLOCK_SKILL } from "./constants/block-skill.js"
-import { PLAYER } from "./constants/player.constant.js"
+import { PLAYER } from "./constants/player-index.constant.js"
 import readline from 'readline';
 
 const rl = readline.createInterface({
@@ -85,7 +85,7 @@ async function updatePoints(characters, roundWinner, isFightBlock) {
 async function declareRoundWinner(characters, totalTestSkills, isFightBlock) {
     if (totalTestSkills[PLAYER.ONE] > totalTestSkills[PLAYER.TWO]) {
         console.log( isFightBlock ?
-            `${characters[PLAYER.ONE].NOME} venceu o confronto${characters[PLAYER.TWO].PONTOS > 0 ? `! ${characters[1].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[PLAYER.TWO].NOME} não tem pontos para perder.`}` :
+            `${characters[PLAYER.ONE].NOME} venceu o confronto${characters[PLAYER.TWO].PONTOS > 0 ? `! ${characters[PLAYER.TWO].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[PLAYER.TWO].NOME} não tem pontos para perder.`}` :
             `${characters[PLAYER.ONE].NOME} marcou um ponto!`
         );
         return PLAYER.ONE;
