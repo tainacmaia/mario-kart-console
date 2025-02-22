@@ -1,5 +1,5 @@
 import { AVAILABLE_CHARACTERS  } from "./constants/available-characters.js" 
-import { BLOCK_SKILL } from "./constants/block-skill.js"
+import { REQUIRED_SKILL } from "./constants/required-skill.js"
 import { PLAYER } from "./constants/player-index.constant.js"
 import readline from 'readline';
 
@@ -27,11 +27,11 @@ async function getRandomBlock() {
     }());
 }
 
-async function logRollResult(characters, blockSkill, diceResults) {
+async function logRollResult(characters, requiredSkill, diceResults) {
     characters.forEach((character, index) => {        
         console.log(
-            `${character.NOME} 🎲 rolou um dado de ${blockSkill} ${diceResults[index]} + ${character[blockSkill]} = ${
-            diceResults[index] + character[blockSkill]
+            `${character.NOME} 🎲 rolou um dado de ${requiredSkill} ${diceResults[index]} + ${character[requiredSkill]} = ${
+                diceResults[index] + character[requiredSkill]
             }`
         );
     });
@@ -42,22 +42,20 @@ async function playRaceEngine(characters) {
         console.log(`🏁 Rodada ${round}`);
 
         // sortear bloco
-        let block = await getRandomBlock();
-        console.log(`Bloco: ${block}`);
+        let sortedBlock = await getRandomBlock();
+        console.log(`Bloco: ${sortedBlock}`);
 
-        let isFightBlock = block == "CONFRONTO";
+        let isFightBlock = sortedBlock == "CONFRONTO";
 
         // rolar os dados
         let diceResults = [ await rollDice(), await rollDice() ];
 
         //teste de habilidade
-        let totalTestSkills = [0,0];
-        totalTestSkills[PLAYER.ONE] = diceResults[PLAYER.ONE] + characters[PLAYER.ONE][BLOCK_SKILL[block]];
-        totalTestSkills[PLAYER.TWO] = diceResults[PLAYER.TWO] + characters[PLAYER.TWO][BLOCK_SKILL[block]];
+        let totalTestSkills = diceResults.map((value, index) => value + characters[index][REQUIRED_SKILL[sortedBlock]]);
 
         if (isFightBlock) console.log(`${characters[PLAYER.ONE].NOME} confrontou ${characters[PLAYER.TWO].NOME}! 🥊`);
 
-        await logRollResult(characters, BLOCK_SKILL[block], diceResults);
+        await logRollResult(characters, REQUIRED_SKILL[sortedBlock], diceResults);
 
         const roundWinner = await declareRoundWinner(characters, totalTestSkills, isFightBlock);
 
@@ -83,23 +81,19 @@ async function updatePoints(characters, roundWinner, isFightBlock) {
 }
 
 async function declareRoundWinner(characters, totalTestSkills, isFightBlock) {
-    if (totalTestSkills[PLAYER.ONE] > totalTestSkills[PLAYER.TWO]) {
-        console.log( isFightBlock ?
-            `${characters[PLAYER.ONE].NOME} venceu o confronto${characters[PLAYER.TWO].PONTOS > 0 ? `! ${characters[PLAYER.TWO].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[PLAYER.TWO].NOME} não tem pontos para perder.`}` :
-            `${characters[PLAYER.ONE].NOME} marcou um ponto!`
-        );
-        return PLAYER.ONE;
-    } else if (totalTestSkills[PLAYER.TWO] > totalTestSkills[PLAYER.ONE]) {
-        console.log( isFightBlock ?
-            `${characters[PLAYER.TWO].NOME} venceu o confronto${characters[PLAYER.ONE].PONTOS > 0 ? `! ${characters[PLAYER.ONE].NOME} perdeu 1 ponto 🐢` : `, mas ${characters[PLAYER.ONE].NOME} não tem pontos para perder.`}` :
-            `${characters[PLAYER.TWO].NOME} marcou um ponto!`
-        );
-        return PLAYER.TWO;
-    } else {
-        console.log("Houve um empate, ninguém ganha pontos.");
-        return PLAYER.NONE
+    const points = totalTestSkills[PLAYER.ONE] - totalTestSkills[PLAYER.TWO];
+    const winner = points == 0 ? PLAYER.NONE : points > 0 ? PLAYER.ONE : PLAYER.TWO;
+    const noTieMessage = `${characters[winner]?.NOME} ${ isFightBlock ? "venceu o confronto": "marcou um ponto!" }`;
+    
+    let message = points == 0 ? "Houve um empate, ninguém ganha pontos." : noTieMessage;
+    if(points != 0 && isFightBlock){
+        message += characters[1 - winner].PONTOS > 0 ? 
+                `! ${characters[1 - winner].NOME} perdeu 1 ponto 🐢` : 
+                `, mas ${characters[1 - winner].NOME} não tem pontos para perder.`
     }
-}
+    console.log(message);
+    return winner
+} 
 
 async function declareFinalWinner(players) {
     console.log("Resultado final:");

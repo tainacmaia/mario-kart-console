@@ -1,4 +1,4 @@
-export const BLOCK_SKILL = {
+export const REQUIRED_SKILL = {
     RETA: "VELOCIDADE",
     CURVA: "MANOBRABILIDADE",
     CONFRONTO: "PODER"
